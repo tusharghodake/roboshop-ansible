@@ -33,7 +33,7 @@
 - name: Install Nginx
   ansible.builtin.yum:
     name: nginx
-    state: installed
+    state: started
 
 - name: Remove old HTTP Documents
   ansible.builtin.file:
