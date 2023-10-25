@@ -1,3 +1,6 @@
 - name : test
-  ansible.builtin.debug:
-    msg : Hello from Frontend
+  tasks:
+    - name: frontend
+      ansible.builtin.debug:
+        msg : Hello from Frontend
+
