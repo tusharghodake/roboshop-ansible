@@ -29,11 +29,10 @@
 #systemctl restart nginx &>>${LOG}
 #status_check
 #
-
 - name: Install Nginx
   ansible.builtin.yum:
     name: nginx
-    state: latest
+    state: installed
 
 - name: Remove old HTTP Documents
   ansible.builtin.file:
@@ -51,18 +50,27 @@
     dest: /usr/share/nginx/html
     remote_src: yes
 
+#- name: Download {{component}} App content
+#  ansible.builtin.unarchive:
+#    src: http://{{nexus_user}}:{{nexus_pass}}@172.31.1.57:8081/repository/{{component}}/{{component}}-{{app_version}}.zip
+#    dest: /usr/share/nginx/html
+#    remote_src: yes
+#  vars:
+#    nexus_user: "{{ lookup('aws_ssm', 'nexus.user', region='us-east-1' ) }}"
+#    nexus_pass: "{{ lookup('aws_ssm', 'nexus.pass', region='us-east-1' ) }}"
+
+- name: Copy Nginx Config
+  ansible.builtin.copy:
+    src: nginx.conf
+    dest: /etc/nginx/nginx.conf
+
 - name: Copy RoboShop Config file to Nginx
   ansible.builtin.copy:
     src: roboshop.conf
     dest: /etc/nginx/default.d/roboshop.conf
 
-#- name: Enable Nginx Service
-#  ansible.builtin.service:
-#    name: nginx
-#    enabled: yes
-
 - name: Start Nginx Service
   ansible.builtin.systemd:
-    name: nginx
     state: restarted
+    name: nginx
     enabled: yes
