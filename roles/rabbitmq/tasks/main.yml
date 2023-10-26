@@ -32,7 +32,7 @@
     - https://packagecloud.io/install/repositories/rabbitmq/rabbitmq-server/script.rpm.sh
 
 - name: Install Erlang & RabbitMQ
-  ansible.biultin.yum:
+  ansible.builtin.yum:
     name:
       - erlang
       - rabbitmq-server
