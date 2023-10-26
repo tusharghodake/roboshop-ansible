@@ -1,0 +1,22 @@
+
+- name: Setup Redis Repo
+  ansible.builtin.yum:
+    name: https://rpms.remirepo.net/enterprise/remi-release-8.rpm
+    state: present
+
+- name: Install Redis server
+  ansible.builtin.yum:
+    name: redis
+    tate: present
+
+- name: Update Redis Listen address
+  ansible.builtin.replace:
+    path: /etc/redis.conf
+    regexp: '127.0.0.1'
+    replace: '0.0.0.0'
+
+- name: Start Redis
+  ansible.builtin.service:
+    name: redis
+    state: started
+    enabled: yes
