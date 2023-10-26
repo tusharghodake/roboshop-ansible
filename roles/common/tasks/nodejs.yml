@@ -1,6 +1,6 @@
 - name: Test
   ansible.builtin.debug:
-    msg: Hello from "{{component}}"
+    msg: Hello from {{component}}
 
 - name : Configure NodeJS Repos
   ansible.builtin.shell: curl -sL https://rpm.nodesource.com/setup_lts.x | bash
@@ -47,21 +47,6 @@
     state: restarted
     enabled: yes
 
-- name: Copy Mongo Repo File
-  ansible.builtin.copy:
-    src: mongodb.repo
-    dest: /etc/yum.repos.d/mongodb.repo
-  when: schema_load
-
-- name: Install Mongodb server
-  ansible.builtin.yum:
-    name: mongodb-org-shell
-    state: present
-  when: schema_load
-
-- name: Load Schema
-  community.mongodb.mongodb_shell:
-    login_host: mongodb-dev.tushardevops.online
-    file: "/app/schema/{{component}}.js"
-    idempotent: yes
+- name: load schema
+  import_tasks: "{{schema_type}}-schema.yml"
   when: schema_load
