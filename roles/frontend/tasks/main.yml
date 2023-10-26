@@ -9,18 +9,18 @@
 
 - name: Remove old HTTP Documents
   ansible.builtin.file:
-    path: /usr/share/nginx/html
+    path: /usr/share/httpd
     state: absent
 
 - name: Create HTTP Document Directory
   ansible.builtin.file:
-    path: /usr/share/nginx/html
+    path: /usr/share/httpd
     state: directory
 
 - name: Download frontend App content
   ansible.builtin.unarchive:
     src: https://roboshop-artifacts.s3.amazonaws.com/frontend.zip
-    dest: /usr/share/nginx/html
+    dest: /usr/share/httpd
     remote_src: yes
 
 #- name: Download {{component}} App content
@@ -40,7 +40,7 @@
 - name: Copy RoboShop Config file to Nginx
   ansible.builtin.copy:
     src: roboshop.conf
-    dest: /etc/nginx/default.d/roboshop.conf
+    dest: /etc/httpd/conf.modules.d/roboshop.conf
 
 - name: Start Nginx Service
   ansible.builtin.service:
