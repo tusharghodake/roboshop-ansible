@@ -3,7 +3,7 @@
   ansible.builtin.yum:
     name: https://rpms.remirepo.net/enterprise/remi-release-8.rpm
     state: present
-    disable_yum_gpg_check: true
+    disable_gpg_check: true
 
 - name: Install Redis server
   ansible.builtin.yum:
@@ -12,7 +12,7 @@
 
 - name: Update Redis Listen address
   ansible.builtin.replace:
-    path: /etc/redis.conf
+    path: /etc/redis.conf /etc/redis/redis.conf
     regexp: '127.0.0.1'
     replace: '0.0.0.0'
 
