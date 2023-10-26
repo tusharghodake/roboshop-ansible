@@ -9,18 +9,18 @@
 
 - name: Remove old HTTP Documents
   ansible.builtin.file:
-    path: /usr/share/httpd
+    path: /usr/share/httpd/html
     state: absent
 
 - name: Create HTTP Document Directory
   ansible.builtin.file:
-    path: /usr/share/httpd
+    path: /usr/share/httpd/html
     state: directory
 
 - name: Download frontend App content
   ansible.builtin.unarchive:
     src: https://roboshop-artifacts.s3.amazonaws.com/frontend.zip
-    dest: /usr/share/httpd
+    dest: //usr/share/httpd/html
     remote_src: yes
 
 #- name: Download {{component}} App content
