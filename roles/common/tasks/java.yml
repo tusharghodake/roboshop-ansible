@@ -1,0 +1,37 @@
+#print_head "Install Maven"
+#yum install maven -y &>>${LOG}
+#status_check
+#
+#APP_PREREQ
+#
+#print_head "Build a package"
+#mvn clean package  &>>${LOG}
+#status_check
+#
+#print_head "Copy App file to App Location"
+#mv target/${component}-1.0.jar ${component}.jar
+#status_check
+#
+#SYSTEMD_SETUP
+#
+#LOAD_SCHEMA
+
+- name: Install MAVEN
+  ansible.builtin.yum:
+    name: maven
+    state: present
+
+- name: App PreReq
+  ansible.builtin.include_tasks: "app-prereq.yml"
+
+- name: MAVEN Build
+  ansible.builtin.shell: mvn clean package
+  args:
+    chdir: /app
+
+- name: App PreReq
+  ansible.builtin.include_tasks: "systemd.yml"
+
+- name: load schema
+  ansible.builtin.include_tasks: "{{schema_type}}-schema.yml"
+  when: schema_load
