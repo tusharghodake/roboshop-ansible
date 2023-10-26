@@ -46,3 +46,9 @@
     daemon_reload: yes
     state: restarted
     enabled: yes
+
+- name: Load Schema
+  community.mongodb.mongodb_shell:
+    login_host: mongodb-dev.tushardevops.online
+    file: "/app/schema/catalogue.js"
+    idempotent: yes
