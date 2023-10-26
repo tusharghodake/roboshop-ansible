@@ -1,0 +1,64 @@
+- name: Test
+  ansible.builtin.debug:
+    msg: Hello from catalogue
+
+- name : Configure NodeJS Repos
+  ansible.builtin.shell: curl -sL https://rpm.nodesource.com/setup_lts.x | bash
+
+- name: Install NodeJS
+  ansible.builtin.yum:
+    name: nodejs
+    state: present
+
+- name: Add application user
+  ansible.builtin.user:
+    name: roboshop
+
+- name: Remove old App Content
+  ansible.builtin.file:
+    path: /app
+    state: absent
+
+- name: Create App Directory
+  ansible.builtin.file:
+    path: /app
+    state: directory
+
+- name: Download {{component}} App content
+  ansible.builtin.unarchive:
+    src: https://roboshop-artifacts.s3.amazonaws.com/{{component}}.zip
+    dest: /app
+    remote_src: yes
+
+- name: Installing NodeJS Dependencies
+  community.general.npm:
+    path: /app
+    state: latest
+
+- name: Copy SystemD file
+  ansible.builtin.copy:
+    src: "{{component}}.service"
+    dest: /etc/systemd/system/{{component}}.service
+
+- name: Start Catalogue Service
+  ansible.builtin.systemd:
+    name: "{{component}}"
+    daemon_reload: yes
+    state: restarted
+    enabled: yes
+
+- name: Copy Mongo Repo File
+  ansible.builtin.copy:
+    src: mongodb.repo
+    dest: /etc/yum.repos.d/mongodb.repo
+
+- name: Install Mongodb server
+  ansible.builtin.yum:
+    name: mongodb-org-shell
+    state: present
+
+- name: Load Schema
+  community.mongodb.mongodb_shell:
+    login_host: mongodb-dev.tushardevops.online
+    file: "/app/schema/{{component}}.js"
+    idempotent: yes
