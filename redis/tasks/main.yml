@@ -3,11 +3,12 @@
   ansible.builtin.yum:
     name: https://rpms.remirepo.net/enterprise/remi-release-8.rpm
     state: present
+    disable_yum_gpg_check: true
 
 - name: Install Redis server
   ansible.builtin.yum:
     name: redis
-    tate: present
+    state: present
 
 - name: Update Redis Listen address
   ansible.builtin.replace:
