@@ -2,7 +2,7 @@
   hosts: localhost
   connection: local
   tasks:
-    - name: Create or update key/value pair in AWS SSM parameter store
+    - name: Create AWS SSM parameters
       community.aws.aws_ssm_parameter_store:
         name: "{{item.name}}"
         value: "{{item.value}}"
@@ -29,4 +29,10 @@
         - { name: "dev.user.MONGO_URL", value: "mongodb://mongodb-dev.tushardevops.online:27017/users" }
 
         ###PASSWORDS SHOULD NEVER BE KEEP IN THESE REPOS. THOSE SHOULD BE CREATED MANUALLY, BUT FOR LAB PURPOSE IM CREATING HERE
+    - name: Create AWS SSM Secrets
+      community.aws.aws_ssm_parameter_store:
+        name: "{{item.name}}"
+        value: "{{item.value}}"
+        region: us-east-1
+      loop:
         - {name: "dev.payment.AMQP_PASS", value: "roboshop123"}
